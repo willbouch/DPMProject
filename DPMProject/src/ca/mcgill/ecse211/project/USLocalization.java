@@ -15,6 +15,26 @@ public class USLocalization implements Runnable {
   private float[] usData = new float[usSensor.sampleSize()];
 
   /**
+   * A private buffer to hold data received from the left light sensor.
+   */
+  private static float[] leftBuffer = new float[leftColorSample.sampleSize()];
+
+  /**
+   * A private buffer to hold data received from the right light sensor.
+   */
+  private static float[] rightBuffer = new float[rightColorSample.sampleSize()];
+
+  /**
+   * A private buffer to store the relevant left light intensity levels over time.
+   */
+  private static float[] leftColorArray = new float[LS_SAMPLE_SIZE];
+
+  /**
+   * A private buffer to store the relevant right light intensity levels over time.
+   */
+  private static float[] rightColorArray = new float[LS_SAMPLE_SIZE];
+
+  /**
    * The number of invalid samples seen by {@code filter()} so far.
    */
   private static int invalidSampleCount;
@@ -22,20 +42,17 @@ public class USLocalization implements Runnable {
   /**
    * The distance remembered by the {@code filter()} method.
    */
-  private static int prevDistance;
+  private static double prevDistance;
 
   /**
-   * Wall distance
+   * A moving average of the left light intensity level over time.
    */
-  private int d = 30;
+  private static float leftMovingAverage = 1;
 
   /**
-   * gap distance
+   * A moving average of the right light intensity level over time.
    */
-  private int k = 5;
-
-  private double theta;
-
+  private static float rightMovingAverage = 1;
 
   /**
    * The main method of the Ultrasonic localizer class, localizes the robot to tile position 1,1 
@@ -43,65 +60,168 @@ public class USLocalization implements Runnable {
    */
   @Override
   public void run() {
-    double alpha;  //Angle to the back
-    double beta;  //Angle to the left 
-    double turnangle;  //Angle to add to orient the robot 
-    int turnOffset = 24;
-    int distFromUSToWheels = 0;
-
+    
     //Set the rotation speed of the motors
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
 
-    // Rotate until we don't see a wall
+    while(true) {
+      double dist = readUsDistance();
+      leftMotor.forward();
+      rightMotor.backward();
+      if(dist < 50) {
+        //It is not seeing infinity so rotate 45 degrees and redo
+        odometer.setTheta(0);
+        Driver.turnBy(45);
+      } else {
+        //We are oriented towards infinity
+        break;
+      }
+    }
+
+    while(true) {
+      double dist = 0;
+      Driver.turnBy(30);
+      for(int i = 0; i < 10; i++) {
+        dist += readUsDistance();
+      }
+      double avg = dist / 10;
+      if(avg < 50) {
+        break;
+      }
+    }
+
+    double prevDist = 255;
+    while(true) {
+      double dist = 0;
+      Driver.turnBy(5);
+      for(int i = 0; i < 10; i++) {
+        double d = readUsDistance();
+        if(d > 50) {
+          i--;
+        }
+        else{
+          dist += d;
+        }     
+      }
+      double avg = dist / 10;
+      if(avg > prevDist) {
+        Driver.turnBy(-20);
+        break;
+      }
+      prevDist = avg;
+    }
+    
+    prevDist = 255;
+    while(true) {
+      double dist = 0;
+      Driver.turnBy(1);
+      for(int i = 0; i < 10; i++) {
+        double d = readUsDistance();
+        if(d > 50) {
+          i--;
+        }
+        else{
+          dist += d;
+        }   
+      }
+      double avg = dist / 10;
+      if(avg > prevDist) {
+        Driver.turnBy(-1);
+        break;
+      }
+      prevDist = avg;
+    }
+    
+
+    //Then we want to make the robot go backward until both sensors detect a line
+    Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
     leftMotor.backward();
-    rightMotor.forward();
-    while(readUsDistance() < d + k);
-
-    // Keep Rotating until we see a wall
-    while(readUsDistance() > d);    
-
-    // Record angle alpha for the first wall
-    alpha = odometer.getXyt()[2];    
-
-    //switch direction and wait until we don't see a wall
-    leftMotor.forward();
     rightMotor.backward();
-    while(readUsDistance() < d + k);
+    waitLineDetection();
+    Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
+    Driver.moveStraightFor(.12);
 
-    // Keep Rotating until we see a wall
-    while(readUsDistance() > d);
-
-    //Record angle beta for the first wall
-    beta = odometer.getXyt()[2];
-
-    //Calculate angle we would need to rotate 
-    turnangle = getRotAngle(alpha, beta);
-
-    leftMotor.rotate(-((Driver.convertAngle(turnangle+turnOffset))), true);
-    rightMotor.rotate(Driver.convertAngle(turnangle+turnOffset), false);
-
-    double distA =readUsDistance();//Read distance from the back wall
-
-    leftMotor.rotate(-Driver.convertAngle(90), true);
-    rightMotor.rotate(Driver.convertAngle(90), false);
-
-    double distB =readUsDistance(); //Read distance from the left wall
-
-    leftMotor.rotate(-Driver.convertAngle(90), true);
-    rightMotor.rotate(Driver.convertAngle(90), false);
+    Main.sleepFor(3000);
     
-    //Move x distance
-    Driver.moveDistFwd((int) (100*(TILE_SIZE+distFromUSToWheels-distA)), FORWARD_SPEED); // Draw a SIDE
+    //Turn 90 degrees and check if we face the wall or infinity
+    Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
+    Driver.turnBy(-90);
 
-    leftMotor.rotate(-Driver.convertAngle(90), true);
-    rightMotor.rotate(Driver.convertAngle(90), false);
+    //Then we want to make the robot go forward until both sensors detect a line
+    leftMotor.forward();
+    rightMotor.forward();
+    waitLineDetection();
+    Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
+    Driver.moveStraightFor(.095);
+
+    //Then we orient towards relative 0 degree and update the odometer values depending on initial location
+     Driver.turnBy(-90);    
+
+    if(GameParameters.getCorner_x() == MAX_X && GameParameters.getCorner_y() == MAX_Y) {
+      odometer.setXyt((MAX_X - 1) * TILE_SIZE, (MAX_Y - 1) * TILE_SIZE, 180);
+    }
+    else if(GameParameters.getCorner_x() == MAX_X && GameParameters.getCorner_y() == 0) {
+      odometer.setXyt((MAX_X - 1) * TILE_SIZE, TILE_SIZE, 270);
+    }
+    else if(GameParameters.getCorner_x() == 0 && GameParameters.getCorner_y() == 0) {
+      odometer.setXyt(TILE_SIZE, TILE_SIZE, 0);
+    }
+    else {
+      odometer.setXyt(TILE_SIZE, (MAX_Y - 1) * TILE_SIZE, 90);
+    }
+  }
+
+  /**
+   * This method samples the light sensors and terminates only when both have detected a line.
+   */
+  public static void waitLineDetection() {
+    boolean left = true;
+    boolean right = true;
     
-    //Move y distance
-    Driver.moveDistFwd((int) (100*(TILE_SIZE+distFromUSToWheels-distB)), FORWARD_SPEED); // Draw a SIDE
+    //Reset light levels in buffer - otherwise it takes a bit to update the buffer.
+    for (int i = 0; i < LS_SAMPLE_SIZE; i++) {
+      leftColorArray[i] = 1000;
+      rightColorArray[i] = 1000;
+    }
 
-    //Robot is now on (1,1) facing 0 relative to corner being (0,0)
-    //We stop the motors so that a new thread can start from scratch
-    Driver.setSpeeds(0, 0);
+    while(left || right) {
+      //We fetch the right light sensor and determine if line detected
+      if(right) {
+        rightColorSample.fetchSample(rightBuffer, 0);
+        float lastMovingAverage = rightMovingAverage;
+        rightMovingAverage +=  ((float)1 / LS_SAMPLE_SIZE) * (rightBuffer[0] * 1000 - rightColorArray[0]);
+        float deriv = (rightMovingAverage - lastMovingAverage) / LS_SLEEP;
+        for (int i = 0; i < LS_SAMPLE_SIZE - 1; i++) {
+          rightColorArray[i] = rightColorArray[i + 1];
+        }
+        rightColorArray[LS_SAMPLE_SIZE - 1] = rightBuffer[0] * 1000;
+
+        if(deriv > LIGHT_CHANGE_THRESHOLD) {
+          right = false;
+          rightMotor.setSpeed(0);
+        }
+      }
+
+      //We fetch the left light sensor and determine if line detected
+      if(left) {
+        leftColorSample.fetchSample(leftBuffer, 0);
+        float lastMovingAverage = leftMovingAverage;
+        leftMovingAverage +=  ((float)1 / LS_SAMPLE_SIZE) * (leftBuffer[0] * 1000 - leftColorArray[0]);
+        float deriv = (leftMovingAverage - lastMovingAverage) / LS_SLEEP;
+        for (int i = 0; i < LS_SAMPLE_SIZE - 1; i++) {
+          leftColorArray[i] = leftColorArray[i + 1];
+        }
+        leftColorArray[LS_SAMPLE_SIZE - 1] = leftBuffer[0] * 1000;
+
+        if(deriv > LIGHT_CHANGE_THRESHOLD) {
+          left = false;
+          leftMotor.setSpeed(0);
+        }
+      }
+
+      //Slow down the fetching
+      Main.sleepFor(LS_SLEEP);
+    }
   }
 
   /**
@@ -109,10 +229,10 @@ public class USLocalization implements Runnable {
    * 
    * @return the filtered distance between the US sensor and an obstacle in cm
    */
-  public int readUsDistance() {
+  public double readUsDistance() {
     usSensor.fetchSample(usData, 0);
     // extract from buffer, convert to cm, cast to int, and filter
-    return filter((int) (usData[0] * 100.0));
+    return filter((usData[0] * 100.0));
   }
 
   /**
@@ -121,7 +241,7 @@ public class USLocalization implements Runnable {
    * @param distance raw distance measured by the sensor in cm
    * @return the filtered distance in cm
    */
-  public static int filter(int distance) {
+  public static double filter(double distance) {
     if (distance >= 255 && invalidSampleCount < INVALID_SAMPLE_LIMIT) {
       // bad value, increment the filter value and return the distance remembered from before
       invalidSampleCount++;
@@ -140,35 +260,5 @@ public class USLocalization implements Runnable {
       prevDistance = distance;
       return distance;
     }
-  }
-
-  /**
-   * Calculates the theta the robot is at based on the points at which it found a specific distance
-   * @param alpha - The first angle it found the distance
-   * @param beta - The second angle it found the distance
-   * @return the theta to turn (in degrees) to fix the odometer error
-   */
-  public double getTheta(double alpha , double beta) {
-    if(alpha < beta)
-    {
-      theta = 45 - (alpha +beta)/2 + 180;
-    }
-
-    else if(beta < alpha)
-    {
-      theta = 225 - (alpha +beta)/2 + 180;
-    }
-
-    return theta;
-  }
-
-  /** 
-   * Gives the angle required to fix the robots bearing based on the points at which it found a specific distance
-   * @param alpha - The first angle it found the distance
-   * @param beta - The second angle it found the distance
-   * @return the theta to turn (in degrees) to have correct bearing
-   */
-  public double getRotAngle(double alpha,double beta) {
-    return getTheta(alpha, beta) + odometer.getXyt()[2];
   }
 }

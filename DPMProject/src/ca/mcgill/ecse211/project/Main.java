@@ -29,25 +29,32 @@ public class Main {
     USLocalization localize = new USLocalization();
     Thread localThread = new Thread(localize);
     localThread.start();
-
+    
     //We wait for the localization to be done
     try {localThread.join();} catch (InterruptedException e) {}
-
-    //Adjust position and orientation with light localization
-    //TODO
+    
     //We beep 3 times to signify the localization is done
     Sound.beep();
     Sound.beep();
     Sound.beep();
-
-    //We can now start the navigation to the other side of tunnel
+    
+    //We start the nav to get to the entrance of the tunnel
     double[] tunnelEntranceAndExitPosition = GameParameters.getTunnelEntranceAndExitPosition();
     double[][] mapToTunnelGo = {
-        {tunnelEntranceAndExitPosition[0], tunnelEntranceAndExitPosition[2]}, 
-        {tunnelEntranceAndExitPosition[1], tunnelEntranceAndExitPosition[3]}
+        {7, 7}, 
     };
-    Navigation navigation = new Navigation(mapToTunnelGo);
+    Navigation navigation = new Navigation(mapToTunnelGo, false);
     Thread navigationThread = new Thread(navigation);
+    navigationThread.start();
+    //We wait for the navigation to the search island to be done
+    try {navigationThread.join();} catch (InterruptedException e) {}
+
+    //We can now start the navigation to the other side of tunnel
+    double[][] mapTunnelThrough = {
+        {tunnelEntranceAndExitPosition[2], tunnelEntranceAndExitPosition[3]}
+    };    
+    navigation = new Navigation(mapTunnelThrough, true);
+    navigationThread = new Thread(navigation);
     navigationThread.start();
     //We wait for the navigation to the search island to be done
     try {navigationThread.join();} catch (InterruptedException e) {}
@@ -58,12 +65,20 @@ public class Main {
 
     //TODO implement the search
 
-    //Once we have the vehicle, we go back to tunnel exit and go through
-    double[][] mapToTunnelBack = {
-        {tunnelEntranceAndExitPosition[2], tunnelEntranceAndExitPosition[0]}, 
-        {tunnelEntranceAndExitPosition[3], tunnelEntranceAndExitPosition[1]}
+//    //Once we have the vehicle, we go back to tunnel exit
+//    double[][] mapToTunnelBack = {
+//        {tunnelEntranceAndExitPosition[2], tunnelEntranceAndExitPosition[3]}, 
+//    };
+//    navigation = new Navigation(mapToTunnelBack, false);
+//    navigationThread = new Thread(navigation);
+//    navigationThread.start();
+//    //We wait for the navigation back to our island to be done
+//    try {navigationThread.join();} catch (InterruptedException e) {}
+    
+    double[][] mapTunnelThroughBack = {
+        {tunnelEntranceAndExitPosition[0], tunnelEntranceAndExitPosition[1]}
     };
-    navigation = new Navigation(mapToTunnelBack);
+    navigation = new Navigation(mapTunnelThroughBack, false);
     navigationThread = new Thread(navigation);
     navigationThread.start();
     //We wait for the navigation back to our island to be done
@@ -72,10 +87,9 @@ public class Main {
     //We can now start the navigation to go back to return position
     int[] returnPosition = GameParameters.getReturnPosition();
     double[][] mapToInitialLocation = {
-        {returnPosition[0]},
-        {returnPosition[1]}
+        {returnPosition[0], returnPosition[1]},
     };
-    navigation = new Navigation(mapToInitialLocation);
+    navigation = new Navigation(mapToInitialLocation, false);
     navigationThread = new Thread(navigation);
     navigationThread.start();
     //We wait for the navigation back to our initial position to be done
@@ -86,8 +100,7 @@ public class Main {
     Sound.beep();
     Sound.beep();
     Sound.beep();
-
-
+    
     System.exit(0);
   }
 
@@ -96,7 +109,23 @@ public class Main {
    * params in GameParameters class
    */
   public static void setGameParameters() {
-    //TODO
+    GameParameters.setTN_LL_x(2);
+    GameParameters.setTN_LL_y(3);
+    GameParameters.setTN_UR_x(3);
+    GameParameters.setTN_UR_y(5);
+    
+    GameParameters.setIsland_LL_x(0);
+    GameParameters.setIsland_LL_y(0);
+    GameParameters.setIsland_UR_x(5);
+    GameParameters.setIsland_UR_y(3);
+    
+    GameParameters.setOrigin_LL_x(0);
+    GameParameters.setOrigin_LL_y(5);
+    GameParameters.setOrigin_UR_x(3);
+    GameParameters.setOrigin_UR_y(8);
+    
+    GameParameters.setUp();
+
   }
 
   /**

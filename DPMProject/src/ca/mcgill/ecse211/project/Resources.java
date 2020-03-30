@@ -20,12 +20,12 @@ public class Resources {
   /**
    * Max x position.
    */
-  public static final int MAX_X = 15;
+  public static final int MAX_X = 8;
   
   /**
    * Max y position.
    */
-  public static final int MAX_Y = 9;
+  public static final int MAX_Y = 8;
 
   /**
    * The wheel radius in centimeters.
@@ -35,17 +35,17 @@ public class Resources {
   /**
    * The robot width in centimeters.
    */
-  public static final double BASE_WIDTH = 12.65;
+  public static final double BASE_WIDTH = 13.23;
 
   /**
    * The speed at which the robot moves forward in degrees per second.
    */
-  public static final int FORWARD_SPEED = 200;
+  public static final int FORWARD_SPEED = 150;
 
   /**
    * The speed at which the robot rotates in degrees per second.
    */
-  public static final int ROTATE_SPEED = 50;
+  public static final int ROTATE_SPEED = 100;
 
   /**
    * Sample size of the buffer used for filtering light sensor data
@@ -60,12 +60,12 @@ public class Resources {
   /**
    * Change in light levels to decide line presence.
    */
-  public static final double LIGHT_CHANGE_THRESHOLD = 2.0;
+  public static final double LIGHT_CHANGE_THRESHOLD = 1.7;
 
   /**
    * sleep time of light sensor in milliseconds
    */
-  public static final long LS_SLEEP = (long)((FORWARD_SPEED * WHEEL_RAD * Math.PI / 180) / LINE_WIDTH);
+  public static final long LS_SLEEP = (long)((ROTATE_SPEED * WHEEL_RAD * Math.PI / 180) / LINE_WIDTH);
 
   /**
    * sleep time of ultrasonic sensor in milliseconds
@@ -93,9 +93,14 @@ public class Resources {
   public static final EV3UltrasonicSensor usSensor = new EV3UltrasonicSensor(SensorPort.S1);
 
   /**
-   * The light sensor for localization
+   * The left light sensor for localization
    */
-  public static final EV3ColorSensor lightSensor = new EV3ColorSensor(SensorPort.S2);
+  public static final EV3ColorSensor leftLightSensor = new EV3ColorSensor(SensorPort.S2);
+  
+  /**
+   * The right light sensor for localization
+   */
+  public static final EV3ColorSensor rightLightSensor = new EV3ColorSensor(SensorPort.S3);
 
   /**
    * The distance of the Light Sensor to the center of the robot in centimeters.
@@ -113,19 +118,24 @@ public class Resources {
   public static final int ACCELERATION = 3000;
 
   /**
-   * A sampleProvider for collecting light sensor data.
+   * A sampleProvider for collecting left light sensor data.
    */
-  public static SampleProvider colorSample = lightSensor.getMode("Red");
+  public static SampleProvider leftColorSample = leftLightSensor.getMode("Red");
+  
+  /**
+   * A sampleProvider for collecting right light sensor data.
+   */
+  public static SampleProvider rightColorSample = rightLightSensor.getMode("Red");
 
   /**
    * The left motor.
    */
-  public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.A);
+  public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.C);
 
   /**
    * The right motor.
    */
-  public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.D);
+  public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.A);
 
   /**
    * The LCD.
