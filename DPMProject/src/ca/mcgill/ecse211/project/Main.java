@@ -43,7 +43,7 @@ public class Main {
     double[][] mapToTunnelGo = {
         {7, 7}, 
     };
-    Navigation navigation = new Navigation(mapToTunnelGo, false);
+    Navigation navigation = new Navigation(mapToTunnelGo, false, false);
     Thread navigationThread = new Thread(navigation);
     navigationThread.start();
     //We wait for the navigation to the search island to be done
@@ -53,7 +53,7 @@ public class Main {
     double[][] mapTunnelThrough = {
         {tunnelEntranceAndExitPosition[2], tunnelEntranceAndExitPosition[3]}
     };    
-    navigation = new Navigation(mapTunnelThrough, true);
+    navigation = new Navigation(mapTunnelThrough, true, false);
     navigationThread = new Thread(navigation);
     navigationThread.start();
     //We wait for the navigation to the search island to be done
@@ -63,33 +63,53 @@ public class Main {
     Sound.beep();
     Sound.beep();
 
-    //TODO implement the search
-
-//    //Once we have the vehicle, we go back to tunnel exit
-//    double[][] mapToTunnelBack = {
-//        {tunnelEntranceAndExitPosition[2], tunnelEntranceAndExitPosition[3]}, 
-//    };
-//    navigation = new Navigation(mapToTunnelBack, false);
-//    navigationThread = new Thread(navigation);
-//    navigationThread.start();
-//    //We wait for the navigation back to our island to be done
-//    try {navigationThread.join();} catch (InterruptedException e) {}
+    //We first get 4 points that are well spread out on the island
+    int delta = (int)Math.ceil((GameParameters.getIsland_UR_x() - GameParameters.getIsland_LL_x()) / 4.0);
+    double x1 = GameParameters.getIsland_LL_x() + delta;
+    double x2 = GameParameters.getIsland_UR_x() - delta;
+    delta = (int)Math.ceil((GameParameters.getIsland_UR_y() - GameParameters.getIsland_LL_y()) / 4.0);
+    double y1 = GameParameters.getIsland_LL_y() + delta;
+    double y2 = GameParameters.getIsland_UR_y() - delta;
+    double[] firstPoint = {x1, y1};
+    double[] secondPoint = {x2, y1};
+    double[] thirdPoint = {x1, y2};
+    double[] fourthPoint = {x2, y2};
+    double[][] mapForSearch = {
+        firstPoint, secondPoint, thirdPoint, fourthPoint
+    };
+    //We create the navigation with this list of 4 points
+    navigation = new Navigation(mapForSearch, false, true);
+    navigationThread = new Thread(navigation);
+    navigationThread.start();
+    //We wait for the searching to be done
+    try {navigationThread.join();} catch (InterruptedException e) {}
+    
+    //At this point, we hopefully have hooked the car
+    //Once we have the vehicle, we go back to tunnel exit
+    double[][] mapToTunnelBack = {
+        {tunnelEntranceAndExitPosition[2], tunnelEntranceAndExitPosition[3]}, 
+    };
+    navigation = new Navigation(mapToTunnelBack, false, false);
+    navigationThread = new Thread(navigation);
+    navigationThread.start();
+    //We wait for the navigation back to our island to be done
+    try {navigationThread.join();} catch (InterruptedException e) {}
     
     double[][] mapTunnelThroughBack = {
         {tunnelEntranceAndExitPosition[0], tunnelEntranceAndExitPosition[1]}
     };
-    navigation = new Navigation(mapTunnelThroughBack, false);
+    navigation = new Navigation(mapTunnelThroughBack, true, false);
     navigationThread = new Thread(navigation);
     navigationThread.start();
     //We wait for the navigation back to our island to be done
     try {navigationThread.join();} catch (InterruptedException e) {}
 
     //We can now start the navigation to go back to return position
-    int[] returnPosition = GameParameters.getReturnPosition();
+    double[] returnPosition = GameParameters.getReturnPosition();
     double[][] mapToInitialLocation = {
         {returnPosition[0], returnPosition[1]},
     };
-    navigation = new Navigation(mapToInitialLocation, false);
+    navigation = new Navigation(mapToInitialLocation, false, false);
     navigationThread = new Thread(navigation);
     navigationThread.start();
     //We wait for the navigation back to our initial position to be done
@@ -106,23 +126,41 @@ public class Main {
 
   /**
    * A method to fetch the game parameters from the WIFI and set the static
-   * params in GameParameters class
+   * params in GameParameters class.
    */
   public static void setGameParameters() {
-    GameParameters.setTN_LL_x(2);
-    GameParameters.setTN_LL_y(3);
-    GameParameters.setTN_UR_x(3);
-    GameParameters.setTN_UR_y(5);
-    
-    GameParameters.setIsland_LL_x(0);
-    GameParameters.setIsland_LL_y(0);
-    GameParameters.setIsland_UR_x(5);
-    GameParameters.setIsland_UR_y(3);
-    
-    GameParameters.setOrigin_LL_x(0);
-    GameParameters.setOrigin_LL_y(5);
-    GameParameters.setOrigin_UR_x(3);
-    GameParameters.setOrigin_UR_y(8);
+    if(redTeam == TEAM_NUMBER) {
+      GameParameters.setTN_LL_x(tnr.ll.x);
+      GameParameters.setTN_LL_y(tnr.ll.y);
+      GameParameters.setTN_UR_x(tnr.ur.x);
+      GameParameters.setTN_UR_y(tnr.ur.y);
+      
+      GameParameters.setIsland_LL_x(szr.ll.x);
+      GameParameters.setIsland_LL_y(szr.ll.y);
+      GameParameters.setIsland_UR_x(szr.ur.x);
+      GameParameters.setIsland_UR_y(szr.ur.y);
+      
+      GameParameters.setOrigin_LL_x(red.ll.x);
+      GameParameters.setOrigin_LL_y(red.ll.y);
+      GameParameters.setOrigin_UR_x(red.ur.x);
+      GameParameters.setOrigin_UR_y(red.ur.y);
+    }
+    else {
+      GameParameters.setTN_LL_x(tng.ll.x);
+      GameParameters.setTN_LL_y(tng.ll.y);
+      GameParameters.setTN_UR_x(tng.ur.x);
+      GameParameters.setTN_UR_y(tng.ur.y);
+      
+      GameParameters.setIsland_LL_x(szg.ll.x);
+      GameParameters.setIsland_LL_y(szg.ll.y);
+      GameParameters.setIsland_UR_x(szg.ur.x);
+      GameParameters.setIsland_UR_y(szg.ur.y);
+      
+      GameParameters.setOrigin_LL_x(green.ll.x);
+      GameParameters.setOrigin_LL_y(green.ll.y);
+      GameParameters.setOrigin_UR_x(green.ur.x);
+      GameParameters.setOrigin_UR_y(green.ur.y);
+    }
     
     GameParameters.setUp();
 

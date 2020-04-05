@@ -9,84 +9,84 @@ public class GameParameters {
   /**
    * Origin lower left x position
    */
-  private static int origin_LL_x;
+  private static double origin_LL_x;
 
   /**
    * Origin lower left y position
    */
-  private static int origin_LL_y;
+  private static double origin_LL_y;
 
   /**
    * Origin upper right x position
    */
-  private static int origin_UR_x;
+  private static double origin_UR_x;
 
   /**
    * Origin upper right y position
    */
-  private static int origin_UR_y;
+  private static double origin_UR_y;
 
   /**
    * Island lower left x position
    */
-  private static int Island_LL_x;
+  private static double Island_LL_x;
 
   /**
    * Island lower left y position
    */
-  private static int Island_LL_y;
+  private static double Island_LL_y;
 
   /**
    * Island upper right x position
    */
-  private static int Island_UR_x;
+  private static double Island_UR_x;
 
   /**
    * Island upper right y position
    */
-  private static int Island_UR_y;
+  private static double Island_UR_y;
 
   /**
    * Tunnel lower left x position
    */
-  private static int TN_LL_x;
+  private static double TN_LL_x;
 
   /**
    * Tunnel lower left y position
    */
-  private static int TN_LL_y;
+  private static double TN_LL_y;
 
   /**
    * Tunnel upper right x position
    */
-  private static int TN_UR_x;
+  private static double TN_UR_x;
 
   /**
    * Tunnel upper right y position
    */
-  private static int TN_UR_y;
+  private static double TN_UR_y;
 
 
   /**
    * Initial corner x position
    */
-  private static int Corner_x;
+  private static double Corner_x;
 
   /**
    * Initial corner y position
    */
-  private static int Corner_y;
+  private static double Corner_y;
   
   
   /**
    * Initial x position
    */
-  private static int Initial_x;
+  private static double Initial_x;
 
   /**
    * Initial y position
    */
-  private static int Initial_y;
+  private static double Initial_y;
   
   
   /**
@@ -207,8 +207,8 @@ public class GameParameters {
    * This method returns the position to which the robot should end its course
    * @return position Position where to end the course
    */
-  public static int[] getReturnPosition() {
-    int[] position = new int[2];
+  public static double[] getReturnPosition() {
+    double[] position = new double[2];
     position[0] = Initial_x;
     position[1] = Initial_y;
     return position;
@@ -217,210 +217,210 @@ public class GameParameters {
   /**
    * @return the initial_x
    */
-  public static int getInitial_x() {
+  public static double getInitial_x() {
     return Initial_x;
   }
 
   /**
    * @return the initial_y
    */
-  public static int getInitial_y() {
+  public static double getInitial_y() {
     return Initial_y;
   }
 
   /**
    * @return the origin_LL_x
    */
-  public static int getOrigin_LL_x() {
+  public static double getOrigin_LL_x() {
     return origin_LL_x;
   }
 
   /**
    * @param origin_LL_x the origin_LL_x to set
    */
-  public static void setOrigin_LL_x(int origin_LL_x) {
+  public static void setOrigin_LL_x(double origin_LL_x) {
     GameParameters.origin_LL_x = origin_LL_x;
   }
 
   /**
    * @return the origin_LL_y
    */
-  public static int getOrigin_LL_y() {
+  public static double getOrigin_LL_y() {
     return origin_LL_y;
   }
 
   /**
    * @param origin_LL_y the origin_LL_y to set
    */
-  public static void setOrigin_LL_y(int origin_LL_y) {
+  public static void setOrigin_LL_y(double origin_LL_y) {
     GameParameters.origin_LL_y = origin_LL_y;
   }
 
   /**
    * @return the origin_UR_x
    */
-  public static int getOrigin_UR_x() {
+  public static double getOrigin_UR_x() {
     return origin_UR_x;
   }
 
   /**
    * @param origin_UR_x the origin_UR_x to set
    */
-  public static void setOrigin_UR_x(int origin_UR_x) {
+  public static void setOrigin_UR_x(double origin_UR_x) {
     GameParameters.origin_UR_x = origin_UR_x;
   }
 
   /**
    * @return the origin_UR_y
    */
-  public static int getOrigin_UR_y() {
+  public static double getOrigin_UR_y() {
     return origin_UR_y;
   }
 
   /**
    * @param origin_UR_y the origin_UR_y to set
    */
-  public static void setOrigin_UR_y(int origin_UR_y) {
+  public static void setOrigin_UR_y(double origin_UR_y) {
     GameParameters.origin_UR_y = origin_UR_y;
   }
 
   /**
    * @return the island_LL_x
    */
-  public static int getIsland_LL_x() {
+  public static double getIsland_LL_x() {
     return Island_LL_x;
   }
 
   /**
    * @param island_LL_x the island_LL_x to set
    */
-  public static void setIsland_LL_x(int island_LL_x) {
+  public static void setIsland_LL_x(double island_LL_x) {
     Island_LL_x = island_LL_x;
   }
 
   /**
    * @return the island_LL_y
    */
-  public static int getIsland_LL_y() {
+  public static double getIsland_LL_y() {
     return Island_LL_y;
   }
 
   /**
    * @param island_LL_y the island_LL_y to set
    */
-  public static void setIsland_LL_y(int island_LL_y) {
+  public static void setIsland_LL_y(double island_LL_y) {
     Island_LL_y = island_LL_y;
   }
 
   /**
    * @return the island_UR_x
    */
-  public static int getIsland_UR_x() {
+  public static double getIsland_UR_x() {
     return Island_UR_x;
   }
 
   /**
    * @param island_UR_x the island_UR_x to set
    */
-  public static void setIsland_UR_x(int island_UR_x) {
+  public static void setIsland_UR_x(double island_UR_x) {
     Island_UR_x = island_UR_x;
   }
 
   /**
    * @return the island_UR_y
    */
-  public static int getIsland_UR_y() {
+  public static double getIsland_UR_y() {
     return Island_UR_y;
   }
 
   /**
    * @param island_UR_y the island_UR_y to set
    */
-  public static void setIsland_UR_y(int island_UR_y) {
+  public static void setIsland_UR_y(double island_UR_y) {
     Island_UR_y = island_UR_y;
   }
 
   /**
    * @return the tN_LL_x
    */
-  public static int getTN_LL_x() {
+  public static double getTN_LL_x() {
     return TN_LL_x;
   }
 
   /**
    * @param tN_LL_x the tN_LL_x to set
    */
-  public static void setTN_LL_x(int tN_LL_x) {
+  public static void setTN_LL_x(double tN_LL_x) {
     TN_LL_x = tN_LL_x;
   }
 
   /**
    * @return the tN_LL_y
    */
-  public static int getTN_LL_y() {
+  public static double getTN_LL_y() {
     return TN_LL_y;
   }
 
   /**
    * @param tN_LL_y the tN_LL_y to set
    */
-  public static void setTN_LL_y(int tN_LL_y) {
+  public static void setTN_LL_y(double tN_LL_y) {
     TN_LL_y = tN_LL_y;
   }
 
   /**
    * @return the tN_UR_x
    */
-  public static int getTN_UR_x() {
+  public static double getTN_UR_x() {
     return TN_UR_x;
   }
 
   /**
    * @param tN_UR_x the tN_UR_x to set
    */
-  public static void setTN_UR_x(int tN_UR_x) {
+  public static void setTN_UR_x(double tN_UR_x) {
     TN_UR_x = tN_UR_x;
   }
 
   /**
    * @return the tN_UR_y
    */
-  public static int getTN_UR_y() {
+  public static double getTN_UR_y() {
     return TN_UR_y;
   }
 
   /**
    * @param tN_UR_y the tN_UR_y to set
    */
-  public static void setTN_UR_y(int tN_UR_y) {
+  public static void setTN_UR_y(double tN_UR_y) {
     TN_UR_y = tN_UR_y;
   }
 
   /**
    * @return the corner_x
    */
-  public static int getCorner_x() {
+  public static double getCorner_x() {
     return Corner_x;
   }
 
   /**
    * @param corner_x the corner_x to set
    */
-  public static void setCorner_x(int corner_x) {
+  public static void setCorner_x(double corner_x) {
     Corner_x = corner_x;
   }
 
   /**
    * @return the corner_y
    */
-  public static int getCorner_y() {
+  public static double getCorner_y() {
     return Corner_y;
   }
 
   /**
    * @param corner_y the corner_y to set
    */
-  public static void setCorner_y(int corner_y) {
+  public static void setCorner_y(double corner_y) {
     Corner_y = corner_y;
   }
 

@@ -8,17 +8,17 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Odometer implements Runnable {
-  
+
   /**
    * The x-axis position in cm.
    */
   private volatile double x;
-  
+
   /**
    * The y-axis position in cm.
    */
   private volatile double y; // y-axis position
-  
+
   /**
    * The orientation in degrees.
    */
@@ -29,7 +29,7 @@ public class Odometer implements Runnable {
    * Fair lock for concurrent writing.
    */
   private static Lock lock = new ReentrantLock(true);
-  
+
   /**
    * Indicates if a thread is trying to reset any position parameters.
    */
@@ -51,7 +51,7 @@ public class Odometer implements Runnable {
    */
   private static final long ODOMETER_PERIOD = 25;
 
-  
+
   /**
    * This is the default constructor of this class. It initiates all motors and variables once. It
    * cannot be accessed externally.
@@ -69,7 +69,7 @@ public class Odometer implements Runnable {
     if (odo == null) {
       odo = new Odometer();
     }
-    
+
     return odo;
   }
 
@@ -91,25 +91,25 @@ public class Odometer implements Runnable {
       //Calculate the displacement of both wheels
       double leftDisplacement = (Math.PI * WHEEL_RAD * (leftMotorTachoCount - leftMotorLastTachoCount)) / 180;
       double rightDisplacement = (Math.PI * WHEEL_RAD * (rightMotorTachoCount - rightMotorLastTachoCount)) / 180;
-      
+
       //Update the tachocounts for the next iteration of the loop
       leftMotorLastTachoCount = leftMotorTachoCount;
       rightMotorLastTachoCount = rightMotorTachoCount;
-      
+
       //Compute displacement of the robot (average of displacement of wheels)
       double displacement = (leftDisplacement + rightDisplacement) / 2;
-      
+
       //Compute change in angle
       double deltaTheta = (leftDisplacement - rightDisplacement) / BASE_WIDTH;
-      
+
       deltaTheta = Math.toDegrees(deltaTheta);
-      
+
       //Calculate x,y component of displacement
       double dx = displacement * Math.sin(Math.toRadians(theta + deltaTheta));
       double dy = displacement * Math.cos(Math.toRadians(theta + deltaTheta));
-            
+
       update(dx, dy, deltaTheta);
-      
+
       // this ensures that the odometer only runs once every period
       updateDuration = System.currentTimeMillis() - updateStart;
       if (updateDuration < ODOMETER_PERIOD) {
@@ -117,9 +117,9 @@ public class Odometer implements Runnable {
       }
     }
   }
-  
+
   // IT IS NOT NECESSARY TO MODIFY ANYTHING BELOW THIS LINE
-  
+
   /**
    * Returns the Odometer data.
    * 
@@ -242,7 +242,7 @@ public class Odometer implements Runnable {
       lock.unlock();
     }
   }
-  
+
   public double getTheta() {
     return theta;
   }

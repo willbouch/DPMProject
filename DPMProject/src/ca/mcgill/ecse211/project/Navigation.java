@@ -8,14 +8,43 @@ import static ca.mcgill.ecse211.project.Resources.*;
  */
 public class Navigation implements Runnable {
 
+  /**
+   * The array of way points to travel to.
+   */
   private double[][] map;
+  
+  /**
+   * The boolean responsible to differentiate if the navigation is one that cross the tunnel.
+   * This is to adjust the position before entering.
+   */
   private boolean isTunnelNav;
+  
+  /**
+   * The boolean responsible to differentiate if the navigation is on the island for searching
+   */
+  private boolean isIslandSearch;
+  
+  /**
+   * The previous X position on the map (last waypoint visited)
+   */
   private static double prevX = GameParameters.getInitial_x();
+  
+  /**
+   * The previous Y position on the map (last waypoint visited)
+   */
   private static double prevY = GameParameters.getInitial_y();
 
-  public Navigation(double[][] map, boolean isTunnelNav) {
+  /**
+   * Constructor for navigation
+   * 
+   * @param map The way points to visit
+   * @param isTunnelNav true if the Navigation is one that crosses a tunnel
+   * @param isTunnelNav true if the Navigation is one for searching on the island
+   */
+  public Navigation(double[][] map, boolean isTunnelNav, boolean isIslandSearch) {
     this.map = map;
     this.isTunnelNav = isTunnelNav;
+    this.isIslandSearch = isIslandSearch;
   }
 
   /**
@@ -24,6 +53,17 @@ public class Navigation implements Runnable {
   public void run() {	  
     for (int i = 0; i < map.length; i++) {
       travelTo(map[i][0]*TILE_SIZE, map[i][1]*TILE_SIZE);
+      if(isIslandSearch) {
+        LightLocalization.adjustPositionForSearching();
+        boolean isCar = lookForCar();
+        if(isCar) {
+          //TODO
+          //Make the robot go forward to get to the car
+          Hook.findPin();
+          Hook.deployHook();
+          break;
+        }
+      }
     }
   }
 
@@ -50,45 +90,14 @@ public class Navigation implements Runnable {
     
     Main.sleepFor(500);
     
+    //Correction before entering the tunnel
     if(isTunnelNav) {
-      Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
-      Driver.turnBy(90);
-      leftMotor.forward();
-      rightMotor.forward();
-      USLocalization.waitLineDetection();
-      Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
-      Driver.moveStraightFor(.095);
-            
-      Driver.moveStraightFor(-1.0/2);
-      
-      Driver.turnBy(-94);
-      
-      Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
-      Driver.moveStraightFor(-1.0/3);
-      leftMotor.forward();
-      rightMotor.forward();
-      USLocalization.waitLineDetection();
-      Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
-      Driver.moveStraightFor(.095);
-      
-      double t = odometer.getTheta();
-      double theta = 0;
-      if(t > 46 && t < 134) {
-        theta = 90;
-      }
-      else if(t > 136 && t < 224) {
-        theta = 180;
-      }
-      else if(t > 226 && t < 314) {
-        theta = 270;
-      }
-      else {
-        theta = 0;
-      }
-
-     odometer.setXyt(prevX, prevY, theta);
+      LightLocalization.adjustPositionForTunnel();
+      odometer.setX(prevX);
+      odometer.setY(prevY);
     }
     
+    //Avoid slips of wheels between rotation and going forward
     Main.sleepFor(500);
     
     //Once it is oriented towards the point, the robot navigates until it is there
@@ -103,6 +112,14 @@ public class Navigation implements Runnable {
     //arrived at the way point.
     double lastDistance = Math.pow(x - odometer.getXyt()[0], 2) + Math.pow(y - odometer.getXyt()[1], 2);
     while(true) {
+      if(isIslandSearch) {
+        //TODO
+        //Poll the US sensor to check that the robot is not facing towards an obstacle
+        //if it is, avoid the obstacle
+        //otherwise, do nothing
+      }
+      
+      
       double currentDistance = Math.pow(x - odometer.getXyt()[0], 2) + Math.pow(y - odometer.getXyt()[1], 2);
       if(currentDistance > lastDistance) {
         break;
@@ -126,7 +143,7 @@ public class Navigation implements Runnable {
   /**
    * Turns the robot to a specified angle.
    */
-  private static void turnTo(double angle) {
+  private void turnTo(double angle) {
     leftMotor.setSpeed(ROTATE_SPEED);
     rightMotor.setSpeed(ROTATE_SPEED);
    
@@ -147,5 +164,24 @@ public class Navigation implements Runnable {
     }
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
+  }
+  
+  
+  
+  /**
+   * Completes a 360 rotation and samples the US sensor to see if anything is detected nearby
+   * 
+   * @return true if a car was detected, false otherwise
+   */
+  private boolean lookForCar() {
+    //TODO
+    //Turn 20 degrees, sample the sensor and check if the distance is under a certain threshold
+    //like 50 cm.
+    //If it is, using the x, y and theta of the odomter, determine if it is a tunnel or a wall
+    //If it is, ignore and keep going
+    //Otherwise, go and sample the colour sensor to see if the object is white.
+    boolean isCar = false;
+    
+    return isCar;
   }
 }

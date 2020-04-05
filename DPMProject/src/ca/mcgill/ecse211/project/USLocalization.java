@@ -55,12 +55,17 @@ public class USLocalization implements Runnable {
   private static float rightMovingAverage = 1;
 
   /**
+   * The distance in cm to consider infinity (for filtering)
+   */
+  private static final int infinity = 50;
+
+  /**
    * The main method of the Ultrasonic localizer class, localizes the robot to tile position 1,1 
    * with a bearing of 0 degrees.
    */
   @Override
   public void run() {
-    
+
     //Set the rotation speed of the motors
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
 
@@ -68,7 +73,7 @@ public class USLocalization implements Runnable {
       double dist = readUsDistance();
       leftMotor.forward();
       rightMotor.backward();
-      if(dist < 50) {
+      if(dist < infinity) {
         //It is not seeing infinity so rotate 45 degrees and redo
         odometer.setTheta(0);
         Driver.turnBy(45);
@@ -78,6 +83,7 @@ public class USLocalization implements Runnable {
       }
     }
 
+    //30 degrees until we find the wall
     while(true) {
       double dist = 0;
       Driver.turnBy(30);
@@ -85,18 +91,19 @@ public class USLocalization implements Runnable {
         dist += readUsDistance();
       }
       double avg = dist / 10;
-      if(avg < 50) {
+      if(avg < infinity) {
         break;
       }
     }
 
+    //5 degrees until we are perpendicular
     double prevDist = 255;
     while(true) {
       double dist = 0;
       Driver.turnBy(5);
       for(int i = 0; i < 10; i++) {
         double d = readUsDistance();
-        if(d > 50) {
+        if(d > infinity) {
           i--;
         }
         else{
@@ -105,19 +112,21 @@ public class USLocalization implements Runnable {
       }
       double avg = dist / 10;
       if(avg > prevDist) {
+        //Go back to adjust with 1 degree rotations
         Driver.turnBy(-20);
         break;
       }
       prevDist = avg;
     }
-    
+
+    //1 degree until we are perpendicular
     prevDist = 255;
     while(true) {
       double dist = 0;
       Driver.turnBy(1);
       for(int i = 0; i < 10; i++) {
         double d = readUsDistance();
-        if(d > 50) {
+        if(d > infinity) {
           i--;
         }
         else{
@@ -131,7 +140,7 @@ public class USLocalization implements Runnable {
       }
       prevDist = avg;
     }
-    
+
 
     //Then we want to make the robot go backward until both sensors detect a line
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
@@ -139,10 +148,10 @@ public class USLocalization implements Runnable {
     rightMotor.backward();
     waitLineDetection();
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
-    Driver.moveStraightFor(.12);
+    Driver.moveStraightFor(SENSOR_TO_CENTER);
 
     Main.sleepFor(3000);
-    
+
     //Turn 90 degrees and check if we face the wall or infinity
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
     Driver.turnBy(-90);
@@ -152,11 +161,12 @@ public class USLocalization implements Runnable {
     rightMotor.forward();
     waitLineDetection();
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
-    Driver.moveStraightFor(.095);
+    Driver.moveStraightFor(SENSOR_TO_CENTER);
 
     //Then we orient towards relative 0 degree and update the odometer values depending on initial location
-     Driver.turnBy(-90);    
+    Driver.turnBy(-90);    
 
+    //Then we adjust the odometer values
     if(GameParameters.getCorner_x() == MAX_X && GameParameters.getCorner_y() == MAX_Y) {
       odometer.setXyt((MAX_X - 1) * TILE_SIZE, (MAX_Y - 1) * TILE_SIZE, 180);
     }
@@ -177,7 +187,7 @@ public class USLocalization implements Runnable {
   public static void waitLineDetection() {
     boolean left = true;
     boolean right = true;
-    
+
     //Reset light levels in buffer - otherwise it takes a bit to update the buffer.
     for (int i = 0; i < LS_SAMPLE_SIZE; i++) {
       leftColorArray[i] = 1000;
