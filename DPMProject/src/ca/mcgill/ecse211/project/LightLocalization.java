@@ -8,6 +8,8 @@ import static ca.mcgill.ecse211.project.Resources.rightMotor;
 
 /**
  * A class that implements the adjustements in position using the two light sensors on the side.
+ * The adjustements take no argument and always return void since the methods take care
+ * of moving the robot and correcting the odometer's values.
  */
 public class LightLocalization {
 

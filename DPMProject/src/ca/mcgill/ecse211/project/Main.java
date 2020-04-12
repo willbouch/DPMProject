@@ -6,7 +6,7 @@ import lejos.hardware.Button;
 import lejos.hardware.Sound;
 
 /**
- * The main driver class for the project.
+ * The main driver class for the project. Takes care of every step of the software flow.
  */
 public class Main {
   /**

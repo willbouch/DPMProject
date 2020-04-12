@@ -4,7 +4,9 @@ package ca.mcgill.ecse211.project;
 import static ca.mcgill.ecse211.project.Resources.*;
 
 /**
- * A class that handles the navigation done throughout the lab, including traveling
+ * A class that handles the navigation done throughout the competition. It takes care
+ * of the travelling to different waypoints, adjusting the flow when the navigation crosses
+ * a tunnel or when the robot is searching the island (using the 2 boolean attributes).
  */
 public class Navigation implements Runnable {
 

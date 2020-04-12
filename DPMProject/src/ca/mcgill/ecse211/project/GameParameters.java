@@ -3,7 +3,8 @@ package ca.mcgill.ecse211.project;
 import static ca.mcgill.ecse211.project.Resources.*;
 
 /**
- * The class to access static game parameters.
+ * The class to access static game parameters and derive all the necessary
+ * information before the start of the program.
  */
 public class GameParameters {
   /**

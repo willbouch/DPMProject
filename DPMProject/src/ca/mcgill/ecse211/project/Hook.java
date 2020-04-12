@@ -1,7 +1,7 @@
 package ca.mcgill.ecse211.project;
 
 /**
- * The class to find the pin and deploy the hook.
+ * The class to find the pin, deploy the hook and retract the hook.
  */
 public class Hook {
   /**
@@ -23,7 +23,7 @@ public class Hook {
    * the dimensions of the car to estimate waypoints or by using
    * the Ultrasonic sensor using bangbang following (will need tests 
    * to determine the best solution). Once the pin is detected 
-   * using the colour sensor, the execution stops and deployHook() is called.
+   * using the colour sensor, the execution stops and {@code deployHook()} is called.
    */
   public static void findPin() {
     //TODO
