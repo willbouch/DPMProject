@@ -106,7 +106,10 @@ public class GameParameters {
   
 
   /**
-   * This method set up the important parameters
+   * This method sets up the important parameters prior to the
+   * execution of the whole program. The robot will then know if
+   * the tunnel is horizontal or vertical, what is its inital position
+   * and other parameters.
    */
   public static void setUp() {
     //Set up the corner

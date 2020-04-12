@@ -133,6 +133,11 @@ public class Resources {
    * The right light sensor for localization
    */
   public static final EV3ColorSensor rightLightSensor = new EV3ColorSensor(SensorPort.S3);
+  
+  /**
+   * The colour sensor for obstacle detection
+   */
+  public static final EV3ColorSensor colourSensor = new EV3ColorSensor(SensorPort.S4);
 
   /**
    * The distance of the Light Sensor to the center of the robot in centimeters.
@@ -173,6 +178,11 @@ public class Resources {
    * The right motor.
    */
   public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.A);
+  
+  /**
+   * The hook motor.
+   */
+  public static final EV3LargeRegulatedMotor hookMotor = new EV3LargeRegulatedMotor(MotorPort.B);
 
   /**
    * The LCD.

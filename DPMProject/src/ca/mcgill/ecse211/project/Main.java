@@ -11,6 +11,7 @@ import lejos.hardware.Sound;
 public class Main {
   /**
    * The main entry point.
+   * The main manages the threads and the execution of every step of the software flow.
    * 
    * @param args not used
    */

@@ -15,6 +15,13 @@ public class LightLocalization {
    * Adjusts the position before entering the tunnel
    */
   public static void adjustPositionForTunnel() {
+    //If the car is towed, we release before localization
+    boolean needToRecuperateCar = false;
+    if(Hook.isCarTowed()) {
+      Hook.retractHook();
+      needToRecuperateCar = true;
+    }
+    
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
     Driver.turnBy(90);
     leftMotor.forward();
@@ -23,7 +30,7 @@ public class LightLocalization {
     Driver.setSpeeds(ROTATE_SPEED, ROTATE_SPEED);
     Driver.moveStraightFor(SENSOR_TO_CENTER);
 
-    //We go back half a tile to positiuon in the middle
+    //We go back half a tile to position in the middle
     Driver.moveStraightFor(-1.0/2);
 
     Driver.turnBy(-90);
@@ -52,6 +59,11 @@ public class LightLocalization {
       theta = 0;
     }
     odometer.setTheta(theta);
+    
+    //If the car was released, we need to hook it back.
+    if(needToRecuperateCar) {
+      Hook.deployHook();
+    }
   }
 
   /**
@@ -59,5 +71,6 @@ public class LightLocalization {
    */
   public static void adjustPositionForSearching() {
     //TODO
+    //Idea developed in the software documentation
   }
 }

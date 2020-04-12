@@ -119,7 +119,6 @@ public class Navigation implements Runnable {
         //otherwise, do nothing
       }
       
-      
       double currentDistance = Math.pow(x - odometer.getXyt()[0], 2) + Math.pow(y - odometer.getXyt()[1], 2);
       if(currentDistance > lastDistance) {
         break;
@@ -177,7 +176,7 @@ public class Navigation implements Runnable {
     //TODO
     //Turn 20 degrees, sample the sensor and check if the distance is under a certain threshold
     //like 50 cm.
-    //If it is, using the x, y and theta of the odomter, determine if it is a tunnel or a wall
+    //If it is, using the x, y and theta of the odometer, determine if it is a tunnel or a wall
     //If it is, ignore and keep going
     //Otherwise, go and sample the colour sensor to see if the object is white.
     boolean isCar = false;
