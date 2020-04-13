@@ -12,7 +12,7 @@ import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.robotics.SampleProvider;;;
+import lejos.robotics.SampleProvider;
 
 /**
  * This class is used to define static resources in one place for easy access and to avoid
