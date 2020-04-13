@@ -51,6 +51,11 @@ public class Navigation implements Runnable {
 
   /**
    * Main navigation method - goes through and travels to each waypoint.
+   * If the Thread was flagged as a navigation to search the island, the robot
+   * adjusts its position at every waypoint using the provided method in the LightLocalization class.
+   * Then, it performs the lookForCar() method, which rotates the robot 360 degrees and polls
+   * the US sensor to see if anything is detected. If a car was found, the robot moves towards it
+   * and then the findPin() method is called followed by deployHook().
    */
   public void run() {	  
     for (int i = 0; i < map.length; i++) {
@@ -71,6 +76,11 @@ public class Navigation implements Runnable {
 
   /**
    * Travel to coordinates.
+   * If the Thread was flagged as a navigation that goes through a tunnel,
+   * The robot will adjust its position before entering the tunnel by using the 
+   * provided method in the LightLocalization class. If the robot has a car towed on its back, If the Thread was flagged as a
+   * navigation to search the island, an obstacle avoidance check is made when navigating.
+   * 
    * @param x x position in cm
    * @param y y position in cm
    */	

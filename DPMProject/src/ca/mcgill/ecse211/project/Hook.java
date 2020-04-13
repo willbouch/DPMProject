@@ -23,7 +23,7 @@ public class Hook {
    * the dimensions of the car to estimate waypoints or by using
    * the Ultrasonic sensor using bangbang following (will need tests 
    * to determine the best solution). Once the pin is detected 
-   * using the colour sensor, the execution stops and {@code deployHook()} is called.
+   * using the colour sensor, the execution stops.
    */
   public static void findPin() {
     //TODO

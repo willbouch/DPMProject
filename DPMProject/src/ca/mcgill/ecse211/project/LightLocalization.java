@@ -17,7 +17,8 @@ public class LightLocalization {
    * Adjusts the position before entering the tunnel. There is no need to pass
    * parameters since this method moves the robot and adjusts the robot's position
    * using the closest horizontal and vertical line to correct the position on both
-   * axis.
+   * axis. If the car is towed to the back of the robot, then the robot releases it
+   * and then performs the localization. It deploys the hook again afterwards.
    */
   public static void adjustPositionForTunnel() {
     //If the car is towed, we release before localization
