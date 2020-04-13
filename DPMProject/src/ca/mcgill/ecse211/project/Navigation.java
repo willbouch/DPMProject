@@ -150,18 +150,20 @@ public class Navigation implements Runnable {
    
     //These conditions are all the cases that make the robot either turn right or left
     //Basically, they are meant to  make the robot turn with a minimal angle
-    if(((angle - odometer.getTheta()) < 180 && (angle - odometer.getTheta()) > 0)
-        || ((angle - odometer.getTheta() + 360) < 180 && (angle - odometer.getTheta() + 360) > 0)) {
+    double theta = odometer.getXyt()[2];
+    
+    if(((angle - theta) < 180 && (angle - theta) > 0)
+        || ((angle - theta + 360) < 180 && (angle - theta + 360) > 0)) {
       //We turn right
       leftMotor.forward();
       rightMotor.backward();
-      while(odometer.getTheta() < angle || odometer.getTheta() > angle + 180);
+      while(odometer.getXyt()[2] < angle || odometer.getXyt()[2] > angle + 180);
     }
     else {
       //We turn left
       leftMotor.backward();
       rightMotor.forward();
-      while(odometer.getTheta() > angle || odometer.getTheta() < angle - 180); 
+      while(odometer.getXyt()[2] > angle || odometer.getXyt()[2] < angle - 180); 
     }
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);

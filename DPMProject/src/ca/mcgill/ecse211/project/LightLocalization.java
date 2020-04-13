@@ -14,7 +14,10 @@ import static ca.mcgill.ecse211.project.Resources.rightMotor;
 public class LightLocalization {
 
   /**
-   * Adjusts the position before entering the tunnel
+   * Adjusts the position before entering the tunnel. There is no need to pass
+   * parameters since this method moves the robot and adjusts the robot's position
+   * using the closest horizontal and vertical line to correct the position on both
+   * axis.
    */
   public static void adjustPositionForTunnel() {
     //If the car is towed, we release before localization
@@ -46,7 +49,7 @@ public class LightLocalization {
     Driver.moveStraightFor(SENSOR_TO_CENTER);
 
     //We adjust the angle of the odometer since we are facing right in front
-    double t = odometer.getTheta();
+    double t = odometer.getXyt()[2];
     double theta = 0;
     if(t > 46 && t < 134) {
       theta = 90;
@@ -69,7 +72,9 @@ public class LightLocalization {
   }
 
   /**
-   * Adjusts the position at each waypoint when searching on the island
+   * Adjusts the position at each waypoint when searching on the island. There is no need to pass
+   * parameters since this method moves the robot and adjusts the robot's position
+   * using the closest point on the grid.
    */
   public static void adjustPositionForSearching() {
     //TODO

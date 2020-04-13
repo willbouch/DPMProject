@@ -7,6 +7,10 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * The odometer is responsible for updating the x,y and theta values by deriving the changes
+ * using the tachocount of the wheels.
+ */
 public class Odometer implements Runnable {
 
   /**
@@ -172,7 +176,7 @@ public class Odometer implements Runnable {
   }
 
   /**
-   * Overrides the values of x, y and theta. Use for odometry correction.
+   * Overwrites the values of x, y and theta. Use for odometry correction.
    * 
    * @param x the value of x
    * @param y the value of y
@@ -242,9 +246,4 @@ public class Odometer implements Runnable {
       lock.unlock();
     }
   }
-
-  public double getTheta() {
-    return theta;
-  }
-
 }

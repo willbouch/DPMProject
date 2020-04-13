@@ -219,6 +219,8 @@ public class GameParameters {
   }
 
   /**
+   * Get the initial x position of the robot after localization is done
+   * 
    * @return the initial_x
    */
   public static double getInitial_x() {
@@ -226,6 +228,8 @@ public class GameParameters {
   }
 
   /**
+   * Get the initial y position of the robot after localization is done
+   * 
    * @return the initial_y
    */
   public static double getInitial_y() {
@@ -233,13 +237,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the origin_LL_x
-   */
-  public static double getOrigin_LL_x() {
-    return origin_LL_x;
-  }
-
-  /**
+   * Setter for the lower left x position of robot island
+   * 
    * @param origin_LL_x the origin_LL_x to set
    */
   public static void setOrigin_LL_x(double origin_LL_x) {
@@ -247,13 +246,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the origin_LL_y
-   */
-  public static double getOrigin_LL_y() {
-    return origin_LL_y;
-  }
-
-  /**
+   * Setter for the lower left y position of robot island
+   * 
    * @param origin_LL_y the origin_LL_y to set
    */
   public static void setOrigin_LL_y(double origin_LL_y) {
@@ -261,13 +255,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the origin_UR_x
-   */
-  public static double getOrigin_UR_x() {
-    return origin_UR_x;
-  }
-
-  /**
+   * Setter for the upper right x position of robot island
+   * 
    * @param origin_UR_x the origin_UR_x to set
    */
   public static void setOrigin_UR_x(double origin_UR_x) {
@@ -275,13 +264,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the origin_UR_y
-   */
-  public static double getOrigin_UR_y() {
-    return origin_UR_y;
-  }
-
-  /**
+   * Setter for the upper right y position of robot island
+   * 
    * @param origin_UR_y the origin_UR_y to set
    */
   public static void setOrigin_UR_y(double origin_UR_y) {
@@ -289,6 +273,8 @@ public class GameParameters {
   }
 
   /**
+   * Getter for the search island lower left x position
+   * 
    * @return the island_LL_x
    */
   public static double getIsland_LL_x() {
@@ -296,6 +282,8 @@ public class GameParameters {
   }
 
   /**
+   * Setter for the search island lower left x position
+   * 
    * @param island_LL_x the island_LL_x to set
    */
   public static void setIsland_LL_x(double island_LL_x) {
@@ -303,6 +291,8 @@ public class GameParameters {
   }
 
   /**
+   * Getter for the search island lower left y position
+   * 
    * @return the island_LL_y
    */
   public static double getIsland_LL_y() {
@@ -310,6 +300,8 @@ public class GameParameters {
   }
 
   /**
+   * Setter for the search island lower left y position
+   * 
    * @param island_LL_y the island_LL_y to set
    */
   public static void setIsland_LL_y(double island_LL_y) {
@@ -317,6 +309,8 @@ public class GameParameters {
   }
 
   /**
+   * Getter for the search island upper right x position
+   * 
    * @return the island_UR_x
    */
   public static double getIsland_UR_x() {
@@ -324,6 +318,8 @@ public class GameParameters {
   }
 
   /**
+   * Setter for the search island upper right x position
+   * 
    * @param island_UR_x the island_UR_x to set
    */
   public static void setIsland_UR_x(double island_UR_x) {
@@ -331,6 +327,8 @@ public class GameParameters {
   }
 
   /**
+   * Getter for the search island upper right y position
+   * 
    * @return the island_UR_y
    */
   public static double getIsland_UR_y() {
@@ -338,6 +336,8 @@ public class GameParameters {
   }
 
   /**
+   * Setter for the search island upper right y position
+   * 
    * @param island_UR_y the island_UR_y to set
    */
   public static void setIsland_UR_y(double island_UR_y) {
@@ -345,13 +345,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the tN_LL_x
-   */
-  public static double getTN_LL_x() {
-    return TN_LL_x;
-  }
-
-  /**
+   * Setter for the tunnel lower left x position
+   * 
    * @param tN_LL_x the tN_LL_x to set
    */
   public static void setTN_LL_x(double tN_LL_x) {
@@ -359,13 +354,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the tN_LL_y
-   */
-  public static double getTN_LL_y() {
-    return TN_LL_y;
-  }
-
-  /**
+   * Setter for the tunnel lower left y position
+   * 
    * @param tN_LL_y the tN_LL_y to set
    */
   public static void setTN_LL_y(double tN_LL_y) {
@@ -373,13 +363,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the tN_UR_x
-   */
-  public static double getTN_UR_x() {
-    return TN_UR_x;
-  }
-
-  /**
+   * Setter for the tunnel upper right x position
+   * 
    * @param tN_UR_x the tN_UR_x to set
    */
   public static void setTN_UR_x(double tN_UR_x) {
@@ -387,13 +372,8 @@ public class GameParameters {
   }
 
   /**
-   * @return the tN_UR_y
-   */
-  public static double getTN_UR_y() {
-    return TN_UR_y;
-  }
-
-  /**
+   * Setter for the tunnel upper right y position
+   * 
    * @param tN_UR_y the tN_UR_y to set
    */
   public static void setTN_UR_y(double tN_UR_y) {
@@ -401,6 +381,8 @@ public class GameParameters {
   }
 
   /**
+   * Getter for the x position of the starting corner
+   * 
    * @return the corner_x
    */
   public static double getCorner_x() {
@@ -408,82 +390,12 @@ public class GameParameters {
   }
 
   /**
-   * @param corner_x the corner_x to set
-   */
-  public static void setCorner_x(double corner_x) {
-    Corner_x = corner_x;
-  }
-
-  /**
+   * Getter for the y position of the starting corner
+   * 
    * @return the corner_y
    */
   public static double getCorner_y() {
     return Corner_y;
   }
-
-  /**
-   * @param corner_y the corner_y to set
-   */
-  public static void setCorner_y(double corner_y) {
-    Corner_y = corner_y;
-  }
-
-  /**
-   * @return the tN_ENTRY_x
-   */
-  public static double getTN_ENTRY_x() {
-    return TN_ENTRY_x;
-  }
-
-  /**
-   * @param tN_ENTRY_x the tN_ENTRY_x to set
-   */
-  public static void setTN_ENTRY_x(double tN_ENTRY_x) {
-    TN_ENTRY_x = tN_ENTRY_x;
-  }
-
-  /**
-   * @return the tN_ENTRY_y
-   */
-  public static double getTN_ENTRY_y() {
-    return TN_ENTRY_y;
-  }
-
-  /**
-   * @param tN_ENTRY_y the tN_ENTRY_y to set
-   */
-  public static void setTN_ENTRY_y(double tN_ENTRY_y) {
-    TN_ENTRY_y = tN_ENTRY_y;
-  }
-
-  /**
-   * @return the direction
-   */
-  public static String getDirection() {
-    return direction;
-  }
-
-  /**
-   * @param direction the direction to set
-   */
-  public static void setDirection(String direction) {
-    GameParameters.direction = direction;
-  }
-
-  /**
-   * @param initial_x the initial_x to set
-   */
-  public static void setInitial_x(int initial_x) {
-    Initial_x = initial_x;
-  }
-
-  /**
-   * @param initial_y the initial_y to set
-   */
-  public static void setInitial_y(int initial_y) {
-    Initial_y = initial_y;
-  }
-  
-  
 
 }

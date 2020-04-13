@@ -60,6 +60,11 @@ public class Hook {
     //Start the motor to retract the hook
   }
   
+  /**
+   * Getter to know if a car is towed at the back of the robot.
+   * 
+   * @return isCarTowed Whether or not a car is towed at the back of the robot
+   */
   public static boolean isCarTowed() {
     return isCarTowed;
   }
